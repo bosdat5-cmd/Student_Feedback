@@ -333,7 +333,7 @@ function startFeedback(){
     document.getElementById('currentFaculty').innerText = faculties[selectedFacultyIndex];
 
     // Reset all fields
-    document.querySelectorAll('#questionsContainer select').forEach(el => el.selectedIndex = 0);
+	document.querySelectorAll('#questionsContainer select').forEach(el => el.selectedIndex = 0);
     document.getElementById('quizMarks').value = '';
 
     // Add event listeners for live calculation
@@ -358,23 +358,26 @@ function calculateWeighted() {
 
     const quizInput = parseFloat(document.getElementById('quizMarks').value) || 0;
     const avgMarks = count ? total / count : 0;
-    const weightedScore = count ? (avgMarks + quizInput) / 2 : 0;
+    const weightedScore = (avgMarks + quizInput) / 2;
 
-    // Determine grade
     let grade = "-";
-    if (weightedScore >= 85) grade = "A+";
-    else if (weightedScore >= 70) grade = "A";
-    else if (weightedScore >= 55) grade = "B+";
-    else if (weightedScore >= 40) grade = "B";
-    else grade = "C";
+    if (weightedScore >= 90) grade = "A+";
+    else if (weightedScore >= 80) grade = "A";
+    else if (weightedScore >= 70) grade = "B+";
+    else if (weightedScore >= 50) grade = "B";
+    else if (weightedScore >= 30) grade = "C";
 
-    // Update readonly display
-    document.getElementById('weightedScoreDisplay').innerText = weightedScore ? weightedScore.toFixed(2) : "0";
+    document.getElementById('weightedScoreDisplay').innerText = weightedScore.toFixed(2);
     document.getElementById('gradeDisplay').innerText = grade;
 }
-
 // Submit feedback
 function submitFacultyFeedback() {
+    // ✅ Safety check for faculty selection
+    if(selectedFacultyIndex === -1){
+        alert("Please select a faculty first.");
+        return;
+    }
+
     const selects = document.querySelectorAll('#questionsContainer select');
     const quizInput = document.getElementById('quizMarks').value.trim();
 
@@ -390,6 +393,9 @@ function submitFacultyFeedback() {
         alert("Quiz marks must be at least 1.");
         return;
     }
+
+    // ... rest of your submit logic
+}
 
     const payload = {
         studentName: document.getElementById('studentName').value,
