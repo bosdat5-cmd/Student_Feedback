@@ -285,7 +285,7 @@ function showPage(pageId){
 
 // Validate student info
 function validatePage1() {
-    const fullName = document.getElementById("fullName").value.trim();
+    const fullName = document.getElementById("studentName").value.trim();
     const regNumber = document.getElementById("regNumber").value.trim();
     const email = document.getElementById("email").value.trim();
     const mobile = document.getElementById("mobile").value.trim();
@@ -306,9 +306,7 @@ function validatePage1() {
         return;
     }
 
-    // ✅ instead of showPage("page2"), call this:
-    showFacultySelection();
-}
+    // ✅ call next page
     showFacultySelection();
 }
 
