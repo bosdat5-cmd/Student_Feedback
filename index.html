@@ -273,7 +273,7 @@ const scoreMap = {
 // Helper to get numeric score safely
 function getScore(id) {
     const val = document.getElementById(id).value;
-    if (!val) return 0; // default
+    if (!val || !val.includes(":")) return 0; // safer
     return scoreMap[val.split(":")[1].trim().toUpperCase()] || 0;
 }
 
@@ -335,11 +335,14 @@ function startFeedback(){
     // Reset all fields
 	document.querySelectorAll('#questionsContainer select').forEach(el => el.selectedIndex = 0);
     document.getElementById('quizMarks').value = '';
+    document.getElementById('batchId').value = '';
 
     // Add event listeners for live calculation
     const allSelects = document.querySelectorAll('#questionsContainer select');
-    allSelects.forEach(el => el.addEventListener('change', calculateWeighted));
-    document.getElementById('quizMarks').addEventListener('input', calculateWeighted);
+    allSelects.forEach(el => {
+        el.onchange = calculateWeighted; // prevents duplicates
+    });
+    document.getElementById('quizMarks').oninput = calculateWeighted;
 }
 
 // Live calculate weighted score and grade
@@ -350,7 +353,7 @@ function calculateWeighted() {
 
     allSelects.forEach(el => {
         if (el.selectedIndex > 0) {
-            const val = el.value.split(":")[1].trim().toUpperCase(); // "1: Poor" -> "POOR"
+            const val = el.value.split(":")[1].trim().toUpperCase();
             total += scoreMap[val];
             count++;
         }
@@ -370,72 +373,59 @@ function calculateWeighted() {
     document.getElementById('weightedScoreDisplay').innerText = weightedScore.toFixed(2);
     document.getElementById('gradeDisplay').innerText = grade;
 }
+
 // Submit feedback
 function submitFacultyFeedback() {
-    // ✅ Safety check for faculty selection
     if(selectedFacultyIndex === -1){
         alert("Please select a faculty first.");
         return;
     }
 
     const selects = document.querySelectorAll('#questionsContainer select');
-    const quizInput = document.getElementById('quizMarks').value.trim();
-
-    for (let el of selects) {
-        if (el.selectedIndex === 0) {
-            alert("Fill all fields.");
+    
+    // make sure all questions are answered
+    for (let sel of selects) {
+        if (sel.selectedIndex === 0) {
+            alert("Please answer all questions before submitting.");
             return;
         }
     }
 
-    const quizMarks = parseFloat(quizInput);
-    if (isNaN(quizMarks) || quizMarks < 1) {
-        alert("Quiz marks must be at least 1.");
+    // validate quiz marks
+    const quizMarks = parseFloat(document.getElementById('quizMarks').value);
+    if (isNaN(quizMarks) || quizMarks < 0) {
+        alert("Enter valid quiz marks.");
         return;
     }
 
-    // ... rest of your submit logic
-}
-
+    // collect data
     const payload = {
-        studentName: document.getElementById('studentName').value,
-        regNumber: document.getElementById('regNumber').value,
-        email: document.getElementById('email').value,
-        mobile: document.getElementById('mobile').value,
+        name: document.getElementById("studentName").value,
+        regNumber: document.getElementById("regNumber").value,
+        email: document.getElementById("email").value,
+        mobile: document.getElementById("mobile").value,
         faculty: faculties[selectedFacultyIndex],
-        batchId: document.getElementById('batchId').value,
-        attendance: getScore("attendance"),
-        dressCode: getScore("dressCode"),
-        discipline: getScore("discipline"),
-        participation: getScore("participation"),
-        teamwork: getScore("teamwork"),
-        presentationContent: getScore("presentationContent"),
-        presentationDelivery: getScore("presentationDelivery"),
-        communication: getScore("communication"),
-        analytical: getScore("analytical"),
-        creativity: getScore("creativity"),
-        ethics: getScore("ethics"),
-        emotional: getScore("emotional"),
-        overallEngagement: getScore("overallEngagement"),
-        quizMarks: quizMarks,
-        weightedScore: parseFloat(document.getElementById('weightedScoreDisplay').innerText),
-        grade: document.getElementById('gradeDisplay').innerText
+        batchId: document.getElementById("batchId").value,
+        quizMarks,
+        weightedScore: document.getElementById("weightedScoreDisplay").innerText,
+        grade: document.getElementById("gradeDisplay").innerText
     };
 
-    fetch("https://script.google.com/macros/s/AKfycbw-2oPl0N6o16KLbu6OBdTu0_PZT0sad0YbWDUQhMKFxvIwi8qSw_AU4mw5MIEo3feyug/exec", {
+    // send to Google Apps Script
+    fetch("https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec", {
         method: "POST",
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/json" }
     })
+    .then(res => res.text())
     .then(() => {
         completedFaculties.push(faculties[selectedFacultyIndex]);
-        const percent = Math.round((completedFaculties.length / totalFaculties) * 100);
-        document.querySelector('.progress-bar').style.width = percent+'%';
-        document.getElementById('progress-text').innerText = percent+'%';
-
-        if (completedFaculties.length >= totalFaculties) showPage('page4');
-        else showFacultySelection();
+        updateProgress();
+        if (completedFaculties.length === totalFaculties) {
+            showPage("page4");
+        } else {
+            showFacultySelection();
+        }
     })
-    .catch(err => alert("Error submitting feedback: "+err));
+    .catch(err => alert("Error submitting feedback: " + err));
 }
-</script>
