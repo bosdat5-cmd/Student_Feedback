@@ -416,23 +416,24 @@ function submitFacultyFeedback() {
         grade: document.getElementById('gradeDisplay').innerText
     };
 
-fetch("https://script.google.com/macros/s/AKfycbyPNAnZXo9psSUBYcexgVUYjhShtngF4evYJOfsSo7PfZm30GONZa852XM_XM9RISM7jg/exec", {
-    method: "POST",
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify(payload)
-})
-.then(response => response.json())  // Parse JSON response
-.then(data => {
-    if (data.result === "success") {
-        completedFaculties.push(faculties[selectedFacultyIndex]);
-        const percent = Math.round((completedFaculties.length / totalFaculties) * 100);
-        document.querySelector('.progress-bar').style.width = percent+'%';
-        document.getElementById('progress-text').innerText = percent+'%';
+    fetch("YOUR_WEB_APP_URL", {
+        method: "POST",
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.result === "success") {
+            completedFaculties.push(faculties[selectedFacultyIndex]);
+            const percent = Math.round((completedFaculties.length / totalFaculties) * 100);
+            document.querySelector('.progress-bar').style.width = percent+'%';
+            document.getElementById('progress-text').innerText = percent+'%';
 
-        if (completedFaculties.length >= totalFaculties) showPage('page4');
-        else showFacultySelection();
-    } else {
-        alert("Error submitting feedback: " + data.message);
-    }
-})
-.catch(err => alert("Error submitting feedback: " + err));
+            if (completedFaculties.length >= totalFaculties) showPage('page4');
+            else showFacultySelection();
+        } else {
+            alert("Error submitting feedback: " + data.message);
+        }
+    })
+    .catch(err => alert("Could not submit feedback: " + err));
+}
