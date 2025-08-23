@@ -1,351 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Student Feedback Form</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-  .form-page { display: none; }
-  .form-page.active { display: block; }
-  .faculty-card { transition: all 0.3s ease; }
-  .faculty-card:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-  .progress-bar { transition: width 0.5s ease-in-out; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Feedback Form</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .form-page { display: none; }
+    .form-page.active { display: block; }
+  </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+  <div class="w-full max-w-3xl bg-white rounded-lg shadow-lg p-6">
+    <h1 class="text-3xl font-bold text-center mb-6">Student Feedback Form</h1>
 
-<div class="container mx-auto px-4 py-8 max-w-4xl">
-
-  <!-- Header -->
-  <div class="text-center mb-8">
-    <h1 class="text-3xl font-bold text-black mb-1">THE INSTITUTE OF CHARTERED ACCOUNTANTS OF INDIA</h1>
-    <h2 class="text-4xl font-bold text-blue-800 mb-4">STUDENT FEEDBACK FORM</h2>
-    <p class="text-gray-600">Your feedback helps us improve the quality of education</p>
-  </div>
-
-  <!-- Progress Bar -->
-  <div class="mb-8 bg-white rounded-lg shadow-sm p-4">
-    <div class="flex justify-between items-center mb-2">
-      <span class="text-sm font-medium text-gray-700">Progress</span>
-      <span class="text-sm font-medium text-blue-600" id="progress-text">0%</span>
-    </div>
-    <div class="w-full bg-gray-200 rounded-full h-2">
-      <div class="progress-bar bg-blue-600 h-2 rounded-full" style="width:0%"></div>
-    </div>
-  </div>
-
-  <!-- Page 1: Student Info -->
-<div id="page1" class="form-page active bg-white rounded-lg shadow-md p-6">
-  <h2 class="text-2xl font-semibold text-gray-800 mb-6">Student Information</h2>
-  <div class="space-y-4">
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
-      <input type="text" id="studentName" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Enter your full name">
-    </div>
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-2">Registration Number *</label>
-      <input type="text" id="regNumber" class="w-full px-4 py-2 border border-gray-300 rounded-md"
-             placeholder="AAA1234567" pattern="[A-Za-z]{3}[0-9]{7}"
-             title="Format: 3 letters followed by 7 digits (e.g., ABC1234567)" required>
-    </div>
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-2">Email ID *</label>
-      <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Enter email address">
-    </div>
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-2">Mobile Number *</label>
-      <input type="tel" id="mobile" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="Enter mobile number">
-    </div>
-  </div>
-  <div class="mt-8 flex justify-end">
-    <button onclick="validatePage1()" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700">
-      Next → Select Faculty
-    </button>
-  </div>
-</div>
-
-<!-- Page 2: Faculty Selection (only once, outside page1) -->
-<div id="page2" class="form-page bg-white rounded-lg shadow-md p-6">
-  <h2 class="text-2xl font-semibold text-gray-800 mb-6">Select Faculty for Feedback</h2>
-  <p class="text-gray-600 mb-6">Please select one faculty at a time. Completed faculties are highlighted in green.</p>
-  <div id="facultyGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-</div>
-  <!-- Page 3: Faculty Feedback -->
-  <div id="page3" class="form-page bg-white rounded-lg shadow-md p-6">
-    <h2 class="text-2xl font-semibold text-gray-800 mb-2">Feedback for <span id="currentFaculty" class="text-blue-600"></span></h2>
-    <p class="text-gray-600 mb-6">Please answer all questions:</p>
-    <div class="space-y-6" id="questionsContainer">
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Batch ID *</label>
-        <input type="text" id="batchId" class="w-full px-4 py-2 border border-gray-300 rounded-md">
+    <!-- Page 1: Student Info -->
+    <div id="page1" class="form-page active">
+      <h2 class="text-xl font-semibold mb-4">Student Information</h2>
+      <div class="space-y-3">
+        <input id="studentName" type="text" placeholder="Student Name" class="w-full border p-2 rounded">
+        <input id="regNumber" type="text" placeholder="Registration Number" class="w-full border p-2 rounded">
+        <input id="email" type="email" placeholder="Email" class="w-full border p-2 rounded">
+        <input id="mobile" type="text" placeholder="Mobile Number" class="w-full border p-2 rounded">
       </div>
-      <!-- Ratings 1-5 (options carry text like "1: Poor") -->
-      <div>
-        <label>Attendance & Punctuality *</label>
-        <select id="attendance" class="w-full px-4 py-2 border border-gray-300 rounded-md">
-          <option value="" disabled selected>Select rating</option>
-          <option>1: Poor</option><option>2: Below Average</option><option>3: Average</option><option>4: Good</option><option>5: Excellent</option>
-        </select>
-      </div>
-      <div>
-        <label>Professional Dress Code *</label>
-        <select id="dressCode" class="w-full px-4 py-2 border border-gray-300 rounded-md">
-          <option value="" disabled selected>Select rating</option>
-          <option>1: Poor</option><option>2: Below Average</option><option>3: Average</option><option>4: Good</option><option>5: Excellent</option>
-        </select>
-      </div>
-      <div>
-        <label>Discipline & Conduct *</label>
-        <select id="discipline" class="w-full px-4 py-2 border border-gray-300 rounded-md">
-          <option value="" disabled selected>Select rating</option>
-          <option>1: Poor</option><option>2: Below Average</option><option>3: Average</option><option>4: Good</option><option>5: Excellent</option>
-        </select>
-      </div>
-      <div>
-        <label>Active Participation *</label>
-        <select id="participation" class="w-full px-4 py-2 border border-gray-300 rounded-md">
-          <option value="" disabled selected>Select rating</option>
-          <option>1: Poor</option><option>2: Below Average</option><option>3: Average</option><option>4: Good</option><option>5: Excellent</option>
-        </select>
-      </div>
-      <div>
-        <label>Group Activities & Teamwork *</label>
-        <select id="teamwork" class="w-full px-4 py-2 border border-gray-300 rounded-md">
-          <option value="" disabled selected>Select rating</option>
-          <option>1: Poor</option><option>2: Below Average</option><option>3: Average</option><option>4: Good</option><option>5: Excellent</option>
-        </select>
-      </div>
-      <div>
-        <label>Presentation Content *</label>
-        <select id="presentationContent" class="w-full px-4 py-2 border border-gray-300 rounded-md">
-          <option value="" disabled selected>Select rating</option>
-          <option>1: Poor</option><option>2: Below Average</option><option>3: Average</option><option>4: Good</option><option>5: Excellent</option>
-        </select>
-      </div>
-      <div>
-        <label>Presentation Delivery *</label>
-        <select id="presentationDelivery" class="w-full px-4 py-2 border border-gray-300 rounded-md">
-          <option value="" disabled selected>Select rating</option>
-          <option>1: Poor</option><option>2: Below Average</option><option>3: Average</option><option>4: Good</option><option>5: Excellent</option>
-        </select>
-      </div>
-      <div>
-        <label>Communication Skills *</label>
-        <select id="communication" class="w-full px-4 py-2 border border-gray-300 rounded-md">
-          <option value="" disabled selected>Select rating</option>
-          <option>1: Poor</option><option>2: Below Average</option><option>3: Average</option><option>4: Good</option><option>5: Excellent</option>
-        </select>
-      </div>
-      <div>
-        <label>Analytical Thinking *</label>
-        <select id="analytical" class="w-full px-4 py-2 border border-gray-300 rounded-md">
-          <option value="" disabled selected>Select rating</option>
-          <option>1: Poor</option><option>2: Below Average</option><option>3: Average</option><option>4: Good</option><option>5: Excellent</option>
-        </select>
-      </div>
-      <div>
-        <label>Creativity & Innovation *</label>
-        <select id="creativity" class="w-full px-4 py-2 border border-gray-300 rounded-md">
-          <option value="" disabled selected>Select rating</option>
-          <option>1: Poor</option><option>2: Below Average</option><option>3: Average</option><option>4: Good</option><option>5: Excellent</option>
-        </select>
-      </div>
-      <div>
-        <label>Professional Ethics Awareness *</label>
-        <select id="ethics" class="w-full px-4 py-2 border border-gray-300 rounded-md">
-          <option value="" disabled selected>Select rating</option>
-          <option>1: Poor</option><option>2: Below Average</option><option>3: Average</option><option>4: Good</option><option>5: Excellent</option>
-        </select>
-      </div>
-      <div>
-        <label>Emotional Intelligence *</label>
-        <select id="emotional" class="w-full px-4 py-2 border border-gray-300 rounded-md">
-          <option value="" disabled selected>Select rating</option>
-          <option>1: Poor</option><option>2: Below Average</option><option>3: Average</option><option>4: Good</option><option>5: Excellent</option>
-        </select>
-      </div>
-      <div>
-        <label>Overall Engagement *</label>
-        <select id="overallEngagement" class="w-full px-4 py-2 border border-gray-300 rounded-md">
-          <option value="" disabled selected>Select rating</option>
-          <option>1: Poor</option><option>2: Below Average</option><option>3: Average</option><option>4: Good</option><option>5: Excellent</option>
-        </select>
-      </div>
-      <div>
-        <label>Quiz Marks *</label>
-        <input type="text" id="quizMarks" class="w-full px-4 py-2 border border-gray-300 rounded-md" placeholder="e.g. 99%">
-      </div>
-
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Weighted Score</label>
-        <span id="weightedScoreDisplay" class="block px-4 py-2 border border-gray-300 rounded-md bg-gray-100">0</span>
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Grade</label>
-        <span id="gradeDisplay" class="block px-4 py-2 border border-gray-300 rounded-md bg-gray-100">-</span>
-      </div>
+      <button onclick="nextPage(2)" class="mt-4 bg-blue-600 text-white px-6 py-2 rounded">Next</button>
     </div>
 
-    <div class="mt-8 flex justify-between">
-      <button onclick="showFacultySelection()" class="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600">← Back</button>
-      <button onclick="submitFacultyFeedback()" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700">Next →</button>
+    <!-- Page 2: Faculty Selection -->
+    <div id="page2" class="form-page">
+      <h2 class="text-xl font-semibold mb-4">Select Faculty</h2>
+      <div id="facultyList" class="grid grid-cols-2 gap-3"></div>
+      <button onclick="nextPage(3)" class="mt-4 bg-blue-600 text-white px-6 py-2 rounded">Next</button>
+    </div>
+
+    <!-- Page 3: Faculty Feedback (16 Questions) -->
+    <div id="page3" class="form-page">
+      <h2 class="text-xl font-semibold mb-4">Faculty Feedback</h2>
+      <form id="feedbackForm" class="space-y-4">
+
+        <div><label>1. Batch ID</label>
+          <input type="text" id="batchId" class="w-full border p-2 rounded">
+        </div>
+
+        <div><label>2. Attendance</label>
+          <select id="attendance" class="w-full border p-2 rounded">
+            <option value="">Select</option><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option>
+          </select>
+        </div>
+
+        <div><label>3. Dress Code</label>
+          <select id="dressCode" class="w-full border p-2 rounded">
+            <option value="">Select</option><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option>
+          </select>
+        </div>
+
+        <div><label>4. Discipline</label>
+          <select id="discipline" class="w-full border p-2 rounded">
+            <option value="">Select</option><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option>
+          </select>
+        </div>
+
+        <div><label>5. Class Participation</label>
+          <select id="participation" class="w-full border p-2 rounded">
+            <option value="">Select</option><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option>
+          </select>
+        </div>
+
+        <div><label>6. Teamwork</label>
+          <select id="teamwork" class="w-full border p-2 rounded">
+            <option value="">Select</option><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option>
+          </select>
+        </div>
+
+        <div><label>7. Presentation Content</label>
+          <select id="presentationContent" class="w-full border p-2 rounded">
+            <option value="">Select</option><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option>
+          </select>
+        </div>
+
+        <div><label>8. Presentation Delivery</label>
+          <select id="presentationDelivery" class="w-full border p-2 rounded">
+            <option value="">Select</option><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option>
+          </select>
+        </div>
+
+        <div><label>9. Communication Skills</label>
+          <select id="communication" class="w-full border p-2 rounded">
+            <option value="">Select</option><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option>
+          </select>
+        </div>
+
+        <div><label>10. Analytical Ability</label>
+          <select id="analytical" class="w-full border p-2 rounded">
+            <option value="">Select</option><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option>
+          </select>
+        </div>
+
+        <div><label>11. Creativity & Innovation</label>
+          <select id="creativity" class="w-full border p-2 rounded">
+            <option value="">Select</option><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option>
+          </select>
+        </div>
+
+        <div><label>12. Professional Ethics</label>
+          <select id="ethics" class="w-full border p-2 rounded">
+            <option value="">Select</option><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option>
+          </select>
+        </div>
+
+        <div><label>13. Emotional Intelligence</label>
+          <select id="emotional" class="w-full border p-2 rounded">
+            <option value="">Select</option><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option>
+          </select>
+        </div>
+
+        <div><label>14. Overall Engagement</label>
+          <select id="overallEngagement" class="w-full border p-2 rounded">
+            <option value="">Select</option><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option>
+          </select>
+        </div>
+
+        <div><label>15. Quiz Marks</label>
+          <input type="number" id="quizMarks" class="w-full border p-2 rounded">
+        </div>
+
+        <div><label>16. Weighted Score / Grade</label>
+          <input type="text" id="weightedScore" class="w-full border p-2 rounded" placeholder="Enter score or grade">
+        </div>
+
+        <button type="button" onclick="submitFacultyFeedback()" class="bg-green-600 text-white px-6 py-2 rounded">Submit Faculty Feedback</button>
+      </form>
     </div>
   </div>
 
-  <!-- Page 4: Completion -->
-  <div id="page4" class="form-page bg-white rounded-lg shadow-md p-6 text-center">
-    <div class="mb-6">
-      <img src="https://placehold.co/200x200" alt="Success" class="mx-auto rounded-full" onerror="this.style.display='none'">
-    </div>
-    <h2 class="text-3xl font-bold text-green-600 mb-4">All Feedback Submitted Successfully!</h2>
-    <p class="text-gray-600 mb-6">Thank you for your valuable feedback.</p>
-  </div>
+  <script>
+    let currentPage = 1;
+    let currentFacultyIndex = -1;
+    let faculties = ["Sandeep Agarwal", "Faculty 2", "Faculty 3", "Faculty 4", "Faculty 5", "Faculty 6",
+                     "Faculty 7", "Faculty 8", "Faculty 9", "Faculty 10", "Faculty 11", "Faculty 12",
+                     "Faculty 13", "Faculty 14", "Faculty 15", "Faculty 16"];
 
-</div>
-
-<script>
-let faculties = ["Sandeep Agarwal","Bhanu Dhir","Shekhar Sharma","Anju Gupta","Preeti Goel","Rohit Agarwal","Sunita Rathore"];
-let completedFaculties = [];
-let selectedFacultyIndex = -1;
-let totalFaculties = faculties.length;
-
-const scoreMap = { "POOR":20, "BELOW AVERAGE":40, "AVERAGE":60, "GOOD":80, "EXCELLENT":100 };
-
-function showPage(pageId){
-  document.querySelectorAll('.form-page').forEach(p=>p.classList.remove('active'));
-  document.getElementById(pageId).classList.add('active');
-}
-
-function updateProgress(){
-  const percent = Math.round((completedFaculties.length / totalFaculties) * 100);
-  document.querySelector('.progress-bar').style.width = percent + '%';
-  document.getElementById('progress-text').textContent = percent + '%';
-}
-
-function validatePage1(){
-  // 🔥 Make sure these IDs exist in HTML <input> tags
-  const fullName = document.getElementById("studentName").value.trim(); // 🔥 FIXED id must exist in HTML
-  const regNumber = document.getElementById("regNumber").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const mobile = document.getElementById("mobile").value.trim();
-
-  if (!fullName || !regNumber || !email || !mobile) {
-    alert("Please fill all required fields.");
-    return;
-  }
-  if (!/^[A-Za-z]{3}[0-9]{7}$/.test(regNumber)) {
-    alert("Registration Number must be 3 letters followed by 7 digits.");
-    return;
-  }
-  if (!/^[0-9]{10}$/.test(mobile)) {
-    alert("Mobile number must be exactly 10 digits.");
-    return;
-  }
-  showFacultySelection(); // 🔥 this will now go to page2
-}
-
-function showFacultySelection() {
-  showPage('page2');
-  const grid = document.getElementById('facultyGrid');
-  grid.innerHTML = '';
-  faculties.forEach((f, idx) => {
-    const card = document.createElement('div');
-    card.className = 'faculty-card p-4 border rounded-md text-center ' +
-      (completedFaculties.includes(f) ? 'bg-green-200 cursor-not-allowed' : 'bg-gray-50 cursor-pointer');
-    card.innerHTML = `<h3 class="font-semibold">${f}</h3>`;
-    if (!completedFaculties.includes(f)) {
-      card.onclick = () => { selectedFacultyIndex = idx; startFeedback(); };
+    // Go to next page
+    function nextPage(page) {
+      document.getElementById(`page${currentPage}`).classList.remove("active");
+      document.getElementById(`page${page}`).classList.add("active");
+      currentPage = page;
+      if (page === 2) loadFaculties();
     }
-    grid.appendChild(card);
-  });
-}
 
-function startFeedback(){
-  showPage('page3');
-  document.getElementById('currentFaculty').innerText = faculties[selectedFacultyIndex];
-
-  document.querySelectorAll('#questionsContainer select').forEach(el => el.selectedIndex = 0);
-  document.getElementById('quizMarks').value = '';
-  document.getElementById('batchId').value = '';
-
-  const allSelects = document.querySelectorAll('#questionsContainer select');
-  allSelects.forEach(el => el.onchange = calculateWeighted);
-  document.getElementById('quizMarks').oninput = calculateWeighted;
-}
-
-function calculateWeighted(){
-  const allSelects = document.querySelectorAll('#questionsContainer select');
-  let total = 0, count = 0;
-  allSelects.forEach(el => {
-    if (el.selectedIndex > 0) {
-      const val = el.value.split(":")[1].trim().toUpperCase();
-      total += scoreMap[val];
-      count++;
+    // Load faculty cards
+    function loadFaculties() {
+      const container = document.getElementById("facultyList");
+      container.innerHTML = "";
+      faculties.forEach((f, idx) => {
+        const div = document.createElement("div");
+        div.className = "border p-3 rounded cursor-pointer hover:bg-blue-100";
+        div.innerText = f;
+        div.onclick = () => { currentFacultyIndex = idx; alert("Selected: " + f); };
+        container.appendChild(div);
+      });
     }
-  });
-  const quizInput = parseFloat(document.getElementById('quizMarks').value) || 0;
-  const avgMarks = count ? total / count : 0;
-  const weightedScore = (avgMarks + quizInput) / 2;
 
-  let grade = "-";
-  if (weightedScore >= 90) grade = "A+";
-  else if (weightedScore >= 80) grade = "A";
-  else if (weightedScore >= 70) grade = "B+";
-  else if (weightedScore >= 50) grade = "B";
-  else if (weightedScore >= 30) grade = "C";
+    // Submit feedback
+    async function submitFacultyFeedback() {
+      if (currentFacultyIndex === -1) {
+        alert("Please select a faculty first.");
+        return;
+      }
 
-  document.getElementById('weightedScoreDisplay').innerText = weightedScore.toFixed(2);
-  document.getElementById('gradeDisplay').innerText = grade;
-}
+      let data = {
+        studentName: document.getElementById("studentName").value,
+        regNumber: document.getElementById("regNumber").value,
+        email: document.getElementById("email").value,
+        mobile: document.getElementById("mobile").value,
+        faculty: faculties[currentFacultyIndex],
+        batchId: document.getElementById("batchId").value,
+        attendance: document.getElementById("attendance").value,
+        dressCode: document.getElementById("dressCode").value,
+        discipline: document.getElementById("discipline").value,
+        participation: document.getElementById("participation").value,
+        teamwork: document.getElementById("teamwork").value,
+        presentationContent: document.getElementById("presentationContent").value,
+        presentationDelivery: document.getElementById("presentationDelivery").value,
+        communication: document.getElementById("communication").value,
+        analytical: document.getElementById("analytical").value,
+        creativity: document.getElementById("creativity").value,
+        ethics: document.getElementById("ethics").value,
+        emotional: document.getElementById("emotional").value,
+        overallEngagement: document.getElementById("overallEngagement").value,
+        quizMarks: document.getElementById("quizMarks").value,
+        weightedScore: document.getElementById("weightedScore").value
+      };
 
-function submitFacultyFeedback(){
-  if(selectedFacultyIndex === -1){
-    alert("Please select a faculty first.");
-    return;
-  }
+      try {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbw-2oPl0N6o16KLbu6OBdTu0_PZT0sad0YbWDUQhMKFxvIwi8qSw_AU4mw5MIEo3feyug/exec", {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: { "Content-Type": "application/json" }
+        });
 
-  const selects = document.querySelectorAll('#questionsContainer select');
-  for (let sel of selects) {
-    if (sel.selectedIndex === 0) {
-      alert("Please answer all questions before submitting.");
-      return;
+        const result = await response.json();
+        if (result.status === "success") {
+          alert("Feedback submitted successfully for " + faculties[currentFacultyIndex]);
+          faculties.splice(currentFacultyIndex, 1); // remove faculty after feedback
+          currentFacultyIndex = -1;
+          if (faculties.length > 0) {
+            nextPage(2);
+          } else {
+            alert("✅ All faculties reviewed!");
+            location.reload();
+          }
+        } else {
+          alert("Error: " + result.message);
+        }
+      } catch (err) {
+        alert("Error submitting feedback: " + err);
+      }
     }
-  }
-
-  const quizMarks = parseFloat(document.getElementById('quizMarks').value);
-  if (isNaN(quizMarks) || quizMarks < 0) {
-    alert("Enter valid quiz marks.");
-    return;
-  }
-
-  const payload = {
-    name: document.getElementById("studentName").value,
-    regNumber: document.getElementById("regNumber").value,
-    email: document.getElementById("email").value,
-    mobile: document.getElementById("mobile").value,
-    faculty: faculties[selectedFacultyIndex],
-    batchId: document.getElementById("batchId").value,
-    quizMarks,
-    weightedScore: document.getElementById("weightedScoreDisplay").innerText,
-    grade: document.getElementById("gradeDisplay").innerText
-  };
-
-  fetch("https://script.google.com/macros/s/AKfycbw-2oPl0N6o16KLbu6OBdTu0_PZT0sad0YbWDUQhMKFxvIwi8qSw_AU4mw5MIEo3feyug/exec", { // 🔥 FIXED
-    method: "POST",
-    body: JSON.stringify(payload),
-    headers: { "Content-Type": "application/json" }
-  })
-  .then(res => res.text())
-  .then(() => {
-    completedFaculties.push(faculties[selectedFacultyIndex]);
-    updateProgress();
-    if (completedFaculties.length === totalFaculties) {
-      showPage("page4");
-    } else {
-      showFacultySelection();
-    }
-  })
-  .catch(err => alert("Error submitting feedback: " + err));
-}
-</script>
+  </script>
+</body>
+</html>
