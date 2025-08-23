@@ -245,11 +245,10 @@ function validatePage1(){
     alert("Mobile number must be exactly 10 digits.");
     return;
   }
-
   showFacultySelection(); // go to page 2
 }
 
-function showFacultySelection(){
+function showFacultySelection() {
   showPage('page2');
   const grid = document.getElementById('facultyGrid');
   grid.innerHTML = '';
@@ -258,13 +257,12 @@ function showFacultySelection(){
     card.className = 'faculty-card p-4 border rounded-md text-center ' +
       (completedFaculties.includes(f) ? 'bg-green-200 cursor-not-allowed' : 'bg-gray-50 cursor-pointer');
     card.innerHTML = `<h3 class="font-semibold">${f}</h3>`;
-    if(!completedFaculties.includes(f)){
+    if (!completedFaculties.includes(f)) {
       card.onclick = () => { selectedFacultyIndex = idx; startFeedback(); };
     }
     grid.appendChild(card);
   });
 }
-
 function startFeedback(){
   showPage('page3');
   document.getElementById('currentFaculty').innerText = faculties[selectedFacultyIndex];
