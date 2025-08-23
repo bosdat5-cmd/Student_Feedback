@@ -284,29 +284,31 @@ function showPage(pageId){
 }
 
 // Validate student info
-function validatePage1(){
-    const name = document.getElementById('studentName').value.trim();
-    const reg = document.getElementById('regNumber').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const mobile = document.getElementById('mobile').value.trim();
+function validatePage1() {
+    const fullName = document.getElementById("fullName").value.trim();
+    const regNumber = document.getElementById("regNumber").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const mobile = document.getElementById("mobile").value.trim();
 
-    if(!name || !reg || !email || !mobile){
-        alert("Fill all student info.");
+    // validation rules
+    if (!fullName || !regNumber || !email || !mobile) {
+        alert("Please fill all required fields.");
         return;
     }
 
-    const regPattern = /^[A-Za-z]{3}[0-9]{7}$/;
-    if (!regPattern.test(reg)) {
-        alert("Registration Number must be 3 letters followed by 7 digits (e.g., ABC1234567).");
+    if (!/^[A-Za-z]{3}[0-9]{7}$/.test(regNumber)) {
+        alert("Registration Number must be 3 letters followed by 7 digits.");
         return;
     }
 
-    const mobilePattern = /^[0-9]{10}$/;
-    if (!mobilePattern.test(mobile)) {
-        alert("Mobile number must be exactly 10 digits.");
+    if (!/^[6-9][0-9]{9}$/.test(mobile)) {
+        alert("Mobile number must be 10 digits starting with 6–9.");
         return;
     }
 
+    // ✅ instead of showPage("page2"), call this:
+    showFacultySelection();
+}
     showFacultySelection();
 }
 
