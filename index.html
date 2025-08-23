@@ -416,12 +416,14 @@ function submitFacultyFeedback() {
         grade: document.getElementById('gradeDisplay').innerText
     };
 
-    fetch("https://script.google.com/macros/s/AKfycbzKDfu8Td4Uo0z6aZ9jDJueBR-QHn_4Y95xK_F0pJKJmSyKtxPq3f50wV2Hjw_k1oSskw/exec", {
-        method: "POST",
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify(payload)
-    })
-    .then(() => {
+fetch("PASTE_NEW_WEB_APP_URL_HERE", {
+    method: "POST",
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+})
+.then(response => response.json())  // Parse JSON response
+.then(data => {
+    if (data.result === "success") {
         completedFaculties.push(faculties[selectedFacultyIndex]);
         const percent = Math.round((completedFaculties.length / totalFaculties) * 100);
         document.querySelector('.progress-bar').style.width = percent+'%';
@@ -429,7 +431,8 @@ function submitFacultyFeedback() {
 
         if (completedFaculties.length >= totalFaculties) showPage('page4');
         else showFacultySelection();
-    })
-    .catch(err => alert("Error submitting feedback: "+err));
-}
-</script>
+    } else {
+        alert("Error submitting feedback: " + data.message);
+    }
+})
+.catch(err => alert("Error submitting feedback: " + err));
