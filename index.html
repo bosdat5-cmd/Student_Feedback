@@ -350,7 +350,7 @@ function calculateWeighted() {
 
     allSelects.forEach(el => {
         if (el.selectedIndex > 0) {
-            const val = el.value.split(":")[1].trim().toUpperCase(); // "1: Poor" -> "POOR"
+            const val = el.value.split(":")[1].trim().toUpperCase();
             total += scoreMap[val];
             count++;
         }
@@ -360,7 +360,6 @@ function calculateWeighted() {
     const avgMarks = count ? total / count : 0;
     const weightedScore = count ? (avgMarks + quizInput) / 2 : 0;
 
-    // Determine grade
     let grade = "-";
     if (weightedScore >= 85) grade = "A+";
     else if (weightedScore >= 70) grade = "A";
@@ -368,7 +367,6 @@ function calculateWeighted() {
     else if (weightedScore >= 40) grade = "B";
     else grade = "C";
 
-    // Update readonly display
     document.getElementById('weightedScoreDisplay').innerText = weightedScore ? weightedScore.toFixed(2) : "0";
     document.getElementById('gradeDisplay').innerText = grade;
 }
@@ -418,25 +416,26 @@ function submitFacultyFeedback() {
 
     fetch("https://script.google.com/macros/s/AKfycbyJrqL0wtolVajl36Kd7sEo6ew9-RUEq-_c72NGfqBvzrLMzNBfLsGO0bIc88xMr6od/exec", {
        method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-})
-.then(res => res.json())
-.then(data => {
-    if (data.result === "success") {
-        completedFaculties.push(faculties[selectedFacultyIndex]);
-        const percent = Math.round((completedFaculties.length / totalFaculties) * 100);
-        document.querySelector('.progress-bar').style.width = percent+'%';
-        document.getElementById('progress-text').innerText = percent+'%';
+       headers: { "Content-Type": "application/json" },
+       body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.result === "success") {
+            completedFaculties.push(faculties[selectedFacultyIndex]);
+            const percent = Math.round((completedFaculties.length / totalFaculties) * 100);
+            document.querySelector('.progress-bar').style.width = percent+'%';
+            document.getElementById('progress-text').innerText = percent+'%';
 
-        if (completedFaculties.length >= totalFaculties) showPage('page4');
-        else showFacultySelection();
-    } else {
-        alert("Server Error: " + data.message);
-    }
-})
-.catch(err => alert("Fetch Error: " + err));
-✅ MOST IMPORTAN
-    });
+            if (completedFaculties.length >= totalFaculties) {
+                showPage('page4');
+            } else {
+                showFacultySelection();
+            }
+        } else {
+            alert("Server Error: " + data.message);
+        }
+    })
+    .catch(err => alert("Fetch Error: " + err.message));
 }
 </script>
