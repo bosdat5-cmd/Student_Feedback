@@ -417,13 +417,13 @@ function submitFacultyFeedback() {
     };
 
     fetch("https://script.google.com/macros/s/AKfycbyU0-NfXfd-w0RvdYmw3C4ChnG9mNutStPd1is-_8Kt10nBCJhY1qv7d5ltI6Xqf31E/exec", {
-        method: "POST",
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify(payload)
-    })
-    .then(response => response.json())   // 👈 Added: parse JSON from server
-    .then(data => {
-        console.log("Server Response:", data); // 👈 Added: log server reply
+       method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+})
+.then(res => res.json())
+.then(data => {
+    if (data.result === "success") {
         completedFaculties.push(faculties[selectedFacultyIndex]);
         const percent = Math.round((completedFaculties.length / totalFaculties) * 100);
         document.querySelector('.progress-bar').style.width = percent+'%';
@@ -431,10 +431,12 @@ function submitFacultyFeedback() {
 
         if (completedFaculties.length >= totalFaculties) showPage('page4');
         else showFacultySelection();
-    })
-    .catch(err => {
-        console.error("Fetch Error:", err); // 👈 Added: log fetch error
-        alert("Error submitting feedback: " + err);
+    } else {
+        alert("Server Error: " + data.message);
+    }
+})
+.catch(err => alert("Fetch Error: " + err));
+✅ MOST IMPORTAN
     });
 }
 </script>
