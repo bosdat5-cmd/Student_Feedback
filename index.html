@@ -312,6 +312,7 @@ function validatePage1(){
     // ✅ If everything is okay, go to next page
     showFacultySelection();
 }
+
 // Show faculty selection
 function showFacultySelection(){
     showPage('page2');
@@ -416,25 +417,28 @@ function submitFacultyFeedback() {
         grade: document.getElementById('gradeDisplay').innerText
     };
 
-fetch("https://formspree.io/projects/2811643071651904924", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-})
-.then(res => {
-    if (res.ok) {
-        completedFaculties.push(faculties[selectedFacultyIndex]);
-        const percent = Math.round((completedFaculties.length / totalFaculties) * 100);
-        document.querySelector('.progress-bar').style.width = percent+'%';
-        document.getElementById('progress-text').innerText = percent+'%';
+    // 🔹 Send to Formspree instead of Google Apps Script
+    fetch("https://formspree.io/projects/2811643071651904924", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+    .then(res => {
+        if (res.ok) {
+            completedFaculties.push(faculties[selectedFacultyIndex]);
+            const percent = Math.round((completedFaculties.length / totalFaculties) * 100);
+            document.querySelector('.progress-bar').style.width = percent+'%';
+            document.getElementById('progress-text').innerText = percent+'%';
 
-        if (completedFaculties.length >= totalFaculties) {
-            showPage('page4');
+            if (completedFaculties.length >= totalFaculties) {
+                showPage('page4');
+            } else {
+                showFacultySelection();
+            }
         } else {
-            showFacultySelection();
+            alert("Formspree Error: Could not submit data.");
         }
-    } else {
-        alert("Formspree Error: Could not submit data.");
-    }
-})
-.catch(err => alert("Fetch Error: " + err.message));
+    })
+    .catch(err => alert("Fetch Error: " + err.message));
+}
+</script>
