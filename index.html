@@ -295,21 +295,23 @@ function validatePage1(){
         return;
     }
 
+    // ✅ Proper regex for registration number (3 letters + 7 digits)
     const regPattern = /^[A-Za-z]{3}[0-9]{7}$/;
     if (!regPattern.test(reg)) {
         alert("Registration Number must be 3 letters followed by 7 digits (e.g., ABC1234567).");
         return;
     }
 
+    // ✅ Proper regex for mobile (10 digits only)
     const mobilePattern = /^[0-9]{10}$/;
     if (!mobilePattern.test(mobile)) {
         alert("Mobile number must be exactly 10 digits.");
         return;
     }
 
+    // ✅ If everything is okay, go to next page
     showFacultySelection();
 }
-
 // Show faculty selection
 function showFacultySelection(){
     showPage('page2');
