@@ -428,7 +428,7 @@ function submitFacultyFeedback() {
             const percent = Math.round((completedFaculties.length / totalFaculties) * 100);
             document.querySelector('.progress-bar').style.width = percent+'%';
             document.getElementById('progress-text').innerText = percent+'%';
-
+			
             if (completedFaculties.length >= totalFaculties) {
                 showPage('page4');
             } else {
